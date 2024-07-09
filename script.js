@@ -24,9 +24,9 @@ window.onload = function() {
         }
 
         // checkboard border
-        // context.strokeStyle = '#000';
-        // context.lineWidth = 4;
-        // context.strokeRect(MARGIN, MARGIN, size, size);
+        context.strokeStyle = '#000';
+        context.lineWidth = 4;
+        context.strokeRect(MARGIN, MARGIN, size, size);
     }
 
     function drawCoordinates(size, rows, cols) {
