@@ -3,11 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Debian Checkboard</title>
+    <title>Debian Knight Checkboard</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <canvas id="checkboardCanvas" width="800" height="800"></canvas>
-    <script src="script.js"></script>
+    <div id="main-container">
+        <canvas id="checkboardCanvas" width="800" height="800"></canvas>
+        <div id="menu">
+            <h3>Select the a knight colour</h3>
+            <label>
+                <input type="radio" name="colour" value="White" checked> White
+            </label>
+            <label>
+                <input type="radio" name="colour" value="Black"> Black
+            </label>
+            <button id="confirmButton">Confirm placement</button>
+            <h3>Move</h3>
+            <input type="text" id="moveInput" placeholder="Enter move" disabled>
+            <button id="moveButton" disabled>Move</button>
+        </div>
+    </div>
+    <script type=module src="script.js"></script>
 </body>
 </html>
