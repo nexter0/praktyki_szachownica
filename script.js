@@ -197,10 +197,15 @@ window.onload = function() {
                 continue;
             }
 
+            // Square occupied guard
+            if (checkboardSlots[destinationY][destinationX] != null) {
+                continue;
+            }
+
             // Move the piece
             if (selectedPiece.move(destinationX, destinationY, checkboardDims)) {
-                console.log(`${selectedPiece.constructor.name} (${selectedPiece.colour}) moves from (${selectedPiece.x, selectedPiece.y})` + 
-                        `to (${destinationX}, ${destinationY}).`);
+                console.log(`${selectedPiece.constructor.name} (${selectedPiece.colour}) moves from (${selectedPiece.x}, ${selectedPiece.y})` + 
+                        ` to (${destinationX}, ${destinationY}).`);
                 checkboardSlots[selectedPiece.y][selectedPiece.x] = null;
                 checkboardSlots[destinationY][destinationX] = selectedPiece;
                 selectedPiece.x = destinationX;
