@@ -26,6 +26,7 @@ class Piece {
 
     getPieceImg() {
         // (HTMLImageElement) Returns a HTMLImageElement with set src
+
         if (this.wImg == null || this.bImg == null)
             throw new Error("'Piece cannot be instantiated on its own. Create a child class eg. 'Knight'")
 
@@ -56,9 +57,17 @@ class Piece {
 
     drawEmptySquare(checkboardDims, col = this.x, row = this.y) {
         // (void) Draws an empty square at selected coords
+
         this.context.fillStyle = (row % 2 === col % 2) ? '#fff' : '#808080';
         this.context.fillRect(col * checkboardDims.cellWidth + checkboardDims.margin, row * checkboardDims.cellHeight +
              checkboardDims.margin, checkboardDims.cellWidth, checkboardDims.cellHeight);
+
+        // redraw checkboard border if necessary
+        if (col == 0 || row == 0 || col == 7 || row == 7) {
+            this.context.strokeStyle = '#000';
+            this.context.lineWidth = 4;
+            this.context.strokeRect(checkboardDims.margin, checkboardDims.margin, checkboardDims.size, checkboardDims.size);
+        }
     }
 
     isLegalMove(targetX, targetY) {
@@ -78,6 +87,7 @@ class Piece {
 
     move(destX, destY, checkboardDims) {
         // (bool) Returns if a move was successful and redraws a square and piece
+
         if (!this.isLegalMove(destX, destY)) {
             alert("Illegal move.");
             return false;

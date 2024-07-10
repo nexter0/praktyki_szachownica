@@ -3,13 +3,14 @@ import {Knight} from './pieces.js'
 window.onload = function() {
     // (void) Executes on window load
 
-    const canvas = document.getElementById('checkboardCanvas');         // HTMLElement Canvas
-    const context = canvas.getContext('2d');                            // HTMLElement Context
-    const confirmButton = document.getElementById('confirmButton');     // HTMLElement Confirm Button
-    const moveButton = document.getElementById('moveButton');           // HTMLElement Move Button
-    const moveTextBox = document.getElementById('moveInput');           // HTMLElement Move Text Box
+    const canvas = document.getElementById('checkboardCanvas');                     // HTMLElement Canvas
+    const context = canvas.getContext('2d');                                        // HTMLElement Context
+    const confirmButton = document.getElementById('confirmButton');                 // HTMLElement Confirm Button
+    const moveButton = document.getElementById('moveButton');                       // HTMLElement Move Button
+    const moveRandomButton = document.getElementById('moveRandomButton');           // HTMLElement Move Button
+    const moveTextBox = document.getElementById('moveInput');                       // HTMLElement Move Text Box
 
-    const checkboardDims = {                                   // An object with checkboard dimentions and sizes data
+    const checkboardDims = {                                                         // An object with checkboard dimentions and sizes data
         
         rows: 8,
         cols: 8,
@@ -27,7 +28,7 @@ window.onload = function() {
 
     function createTwoDimArr(arrSize = 8) {
         // (any[][]) Returns a 2 dim array filled with null of given size
-        
+
         let arr = [];
 
         for (let i = 0; i < arrSize * arrSize; i++) {
@@ -56,7 +57,7 @@ window.onload = function() {
             }
         }
 
-        // checkboard border
+        // draw checkboard border
         context.strokeStyle = '#000';
         context.lineWidth = 4;
         context.strokeRect(checkboardDims.margin, checkboardDims.margin, size, size);
@@ -128,6 +129,7 @@ window.onload = function() {
         console.log(knight);
         checkboardSlots[row][col] = knight;
         knight.place(checkboardDims);
+        selectedPiece = knight;
         pieceId++;
         console.log(checkboardSlots);
 
@@ -173,15 +175,43 @@ window.onload = function() {
             
         // Move the piece
         if (selectedPiece.move(destinationX, destinationY, checkboardDims)) {
-            console.log(`${selectedPiece.constructor.name} (${selectedPiece.colour}) moves from (${selectedPiece.x, selectedPiece.y})` + 
-                 `to (${destinationX}, ${destinationY}).`);
+            console.log(`${selectedPiece.constructor.name} (${selectedPiece.colour}) moves from (${selectedPiece.x}, ${selectedPiece.y})` + 
+                 ` to (${destinationX}, ${destinationY}).`);
             checkboardSlots[selectedPiece.y][selectedPiece.x] = null;
             checkboardSlots[destinationY][destinationX] = selectedPiece;
             selectedPiece.x = destinationX;
-            selectedPiece.y = destinationY;
-            selectedPiece = null;
+            selectedPiece.y = destinationY; 
         }
         console.log(checkboardSlots);
+    }
+
+    function movePieceRandom() {
+        // Move the piece
+        var hasMoved = false;
+        for (let move of selectedPiece.possibleMoves) {
+            var destinationX = selectedPiece.x + move[0];
+            var destinationY = selectedPiece.y + move[1];
+
+            // Invalid coords guard
+            if (destinationX < 0 || destinationX > 7 || destinationY < 0 || destinationY > 7) {
+                continue;
+            }
+
+            // Move the piece
+            if (selectedPiece.move(destinationX, destinationY, checkboardDims)) {
+                console.log(`${selectedPiece.constructor.name} (${selectedPiece.colour}) moves from (${selectedPiece.x, selectedPiece.y})` + 
+                        `to (${destinationX}, ${destinationY}).`);
+                checkboardSlots[selectedPiece.y][selectedPiece.x] = null;
+                checkboardSlots[destinationY][destinationX] = selectedPiece;
+                selectedPiece.x = destinationX;
+                selectedPiece.y = destinationY;
+                hasMoved = true;
+            }
+
+            if (hasMoved) {
+                break;
+            }
+        }
     }
 
     // Drawing
@@ -218,6 +248,7 @@ window.onload = function() {
             isInMovingMode = true;
             moveButton.disabled = false;
             moveTextBox.disabled = false;
+            moveRandomButton.disabled = false;
             alert('You can now move the pieces.');
         }
         else {
@@ -227,8 +258,12 @@ window.onload = function() {
 
     moveButton.addEventListener('click', function() {
         // (void) Listen for the 'Move' button
-
         movePiece()
+    });
+
+    moveRandomButton.addEventListener('click', function() {
+        // (void) Listen for the 'Move Random' button
+        movePieceRandom()
     });
 
 };
