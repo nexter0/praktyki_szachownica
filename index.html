@@ -9,19 +9,32 @@
 <body>
     <div id="main-container">
         <canvas id="checkboardCanvas" width="800" height="800"></canvas>
-        <div id="menu">
-            <h3>Select the a knight colour</h3>
-            <label>
-                <input type="radio" name="colour" value="White" checked> White
-            </label>
-            <label>
-                <input type="radio" name="colour" value="Black"> Black
-            </label>
-            <button id="confirmButton">Confirm placement</button>
-            <h3>Move</h3>
-            <input type="text" id="moveInput" placeholder="Enter move" disabled>
-            <button id="moveButton" disabled>Move</button>
-        </div>
+        <div id="sidebar">
+            <div id="menu">
+                <h3>Kolor skoczka</h3>
+                <label>
+                    <input type="radio" name="colour" value="White" checked> Biały
+                </label>
+                <label>
+                    <input type="radio" name="colour" value="Black"> Czarny
+                </label>
+                <button id="confirmButton">Potwierdź ustawienie</button>
+                <h3>Ruch figury</h3>
+                <input type="text" id="moveInput" placeholder="Współrzędne pola" disabled>
+                <button id="moveButton" disabled>Wykonaj</button>
+            </div>
+            <div id="instructions">
+                <h2>Instrukcja</h2>
+                <ul>
+                    <li>Wybierz kolor skoczka do ustawienia.</li>
+                    <li>Ustaw figury na szachownicy (nie ma limitu figur danego rodzaju i koloru).</li>
+                    <li>Wybierz <i>Potwierdź ustawienie</i>, aby zatwierdzić ustawienie.</li>
+                    <li>Wybierz figurę, którą chcesz ruszyć klikając na nią.</li>
+                    <li>Wpisz pole (np. B3), na które chcesz ruszyć figurę.</li>
+                    <li>Powtórz od kroku 3. Obenie przejmowanie figur nie jest zaimplementowane.</li>
+                </ul>
+            </div>
+        <div id="sidebar">
     </div>
     <script type=module src="script.js"></script>
 </body>

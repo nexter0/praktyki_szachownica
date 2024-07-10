@@ -208,10 +208,15 @@ window.onload = function() {
 
     confirmButton.addEventListener('click', function() {
         // (void) Listen for the 'Confirm' button
-        isInMovingMode = true;
-        moveButton.disabled = false;
-        moveTextBox.disabled = false;
-        alert('You can now move the pieces.');
+        if (pieceId > 0){
+            isInMovingMode = true;
+            moveButton.disabled = false;
+            moveTextBox.disabled = false;
+            alert('You can now move the pieces.');
+        }
+        else {
+            alert('There are no pieces on the board.');
+        }
     });
 
     moveButton.addEventListener('click', function() {
