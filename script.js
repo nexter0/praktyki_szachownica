@@ -27,6 +27,7 @@ window.onload = function() {
 
     function createTwoDimArr(arrSize = 8) {
         // (any[][]) Returns a 2 dim array filled with null of given size
+        
         let arr = [];
 
         for (let i = 0; i < arrSize * arrSize; i++) {
@@ -109,14 +110,15 @@ window.onload = function() {
 
     function updateSelectedColour() {
         // (void) Updates piece colour selection
+
         const selectedRadioButton = document.querySelector('input[name="colour"]:checked');
         selectedColour = selectedRadioButton.value.toLowerCase();
     }
 
     function placePiece(col, row) {
         // (bool) Returns if action was successful and places a piece
-        // Square occupied guard
 
+        // Square occupied guard
         if (checkboardSlots[row][col] != null) {
             alert("You can't place another piece here. This square is occupied.");
             return false;
@@ -134,6 +136,7 @@ window.onload = function() {
 
     function selectPiece(col, row) {
         // (void) Selects the clicked piece
+
         const coordsArr = cellToString(col, row);
         selectedPiece = checkboardSlots[row][col];
         if (selectedPiece != null) {
@@ -188,6 +191,7 @@ window.onload = function() {
     // Listeners
     canvas.addEventListener('click', function(event) {
         // (void) Listen for checkboard clicks
+
         const {x, y} = getMousePosition(event);
         const {row, col} = getSquareClicked(x, y);
         if (col >= 0 && row >= 0 && col < checkboardDims.rows && row < checkboardDims.rows) {
@@ -203,11 +207,13 @@ window.onload = function() {
     const radioButtons = document.querySelectorAll('input[name="colour"]');
     radioButtons.forEach(radio => {
         // (void) Liten for colour radio buttons changes
+
         radio.addEventListener('change', updateSelectedColour);
     });
 
     confirmButton.addEventListener('click', function() {
         // (void) Listen for the 'Confirm' button
+
         if (pieceId > 0){
             isInMovingMode = true;
             moveButton.disabled = false;
@@ -221,6 +227,7 @@ window.onload = function() {
 
     moveButton.addEventListener('click', function() {
         // (void) Listen for the 'Move' button
+
         movePiece()
     });
 
