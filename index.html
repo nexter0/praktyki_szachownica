@@ -3,11 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Debian Checkboard</title>
+    <title>Debian Knight Checkboard</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <canvas id="checkboardCanvas" width="800" height="800"></canvas>
-    <script src="script.js"></script>
+    <div id="main-container">
+        <canvas id="checkboardCanvas" width="800" height="800"></canvas>
+        <div id="sidebar">
+            <div id="menu">
+                <h3>Kolor skoczka</h3>
+                <label>
+                    <input type="radio" name="colour" value="White" checked> Biały
+                </label>
+                <label>
+                    <input type="radio" name="colour" value="Black"> Czarny
+                </label>
+                <button id="confirmButton">Potwierdź ustawienie</button>
+                <h3>Ruch figury</h3>
+                <input type="text" id="moveInput" placeholder="Współrzędne pola" disabled>
+                <button id="moveButton" disabled>Wykonaj</button>
+                <button id="moveRandomButton" disabled>Wykonaj losowy ruch</button>
+                <button id="moveKnightsTourButton" disabled>Knight's Tour</button>
+            </div>
+            <div id="instructions">
+                <h2>Instrukcja</h2>
+                <ul>
+                    <li>Wybierz kolor skoczka do ustawienia.</li>
+                    <li>Ustaw figury na szachownicy (nie ma limitu figur danego rodzaju i koloru).</li>
+                    <li>Wybierz <i>Potwierdź ustawienie</i>, aby zatwierdzić ustawienie.</li>
+                    <li>Wybierz figurę, którą chcesz ruszyć klikając na nią.</li>
+                    <li>Wpisz pole (np. B3), na które chcesz ruszyć figurę.</li>
+                    <li>Powtórz od kroku 3. Obenie przejmowanie figur nie jest zaimplementowane.</li>
+                </ul>
+            </div>
+        <div id="sidebar">
+    </div>
+    <script type=module src="script.js"></script>
 </body>
 </html>
