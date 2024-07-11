@@ -105,6 +105,6 @@ class Knight extends Piece {
         const bImg = './res/bKnight.png';
         const wImg = './res/wKnight.png';
         super(id, colour, x, y, context, bImg, wImg)
-        this.possibleMoves = [[-1, 2], [1, 2], [2, 1], [2, -1], [1, -2], [-1, -2], [-2, 1], [-2, -1]]
+        this.possibleMoves = [[-1, 2], [1, 2], [1, -2], [-1, -2], [2, 1], [2, -1], [-2, 1], [-2, -1]]
     }
 };

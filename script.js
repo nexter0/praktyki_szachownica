@@ -9,6 +9,7 @@ window.onload = function() {
     const moveButton = document.getElementById('moveButton');                       // HTMLElement Move Button
     const moveRandomButton = document.getElementById('moveRandomButton');           // HTMLElement Move Button
     const moveTextBox = document.getElementById('moveInput');                       // HTMLElement Move Text Box
+    const moveKnightsTourButton = document.getElementById('moveKnightsTourButton')  // HTMLElement Move Button
 
     const checkboardDims = {                                                         // An object with checkboard dimentions and sizes data
         
@@ -23,6 +24,7 @@ window.onload = function() {
     let selectedColour = "white";                               // Selected colour of a Piece to be placed
     let isInMovingMode = false;                                 // Boolean determining placing or moving mode.
     let checkboardSlots = createTwoDimArr();                    // Two dim array representing whole checkboard. It should contain Piece objects
+    let knightsTourBoard = createTwoDimArr();                   // Two dim array representing Knight's Tour moves map
     let pieceId = 0;                                            // Piece Id counter
     let selectedPiece = null;                                   // Selected Piece object
 
@@ -146,6 +148,21 @@ window.onload = function() {
         }
     }
 
+    function isValidMove(destX, destY) {
+        if (destX < 0 || destX > 7 || destY < 0 || destY > 7 || destX == null) {
+            return false;
+        }
+        return true;
+    }
+
+    function isSquareFree(destX, destY) {
+        if (checkboardSlots[destY][destX] != null) {
+            alert("Illegal move. This square is occupied.");
+            return false;
+        }
+        return true;
+    }
+
     function movePiece() {
         // (bool) Returns if a move was successful and does the move logic
 
@@ -161,18 +178,16 @@ window.onload = function() {
         var destinationX = colsId.indexOf(moveStr[0]);
         var destinationY = 8 - moveStr[1];
 
-        // Invalid coords guard
-        if (destinationX < 0 || destinationX > 7 || destinationY < 0 || destinationY > 7 || destinationX == null) {
+        if (!isValidMove(destinationX, destinationY)) {
             alert("Illegal coordinates. Please use chess notation, for example: 'B3'.\nYou can use letters A-H and numbers 1-8");
             return false;
         }
+  
 
-        // Square occupied guard
-        if (checkboardSlots[destinationY][destinationX] != null) {
-            alert("Illegal move. This square is occupied.");
+        if (!isSquareFree(destinationX, destinationY)) {
             return false;
         }
-            
+ 
         // Move the piece
         if (selectedPiece.move(destinationX, destinationY, checkboardDims)) {
             console.log(`${selectedPiece.constructor.name} (${selectedPiece.colour}) moves from (${selectedPiece.x}, ${selectedPiece.y})` + 
@@ -186,19 +201,18 @@ window.onload = function() {
     }
 
     function movePieceRandom() {
-        // Move the piece
+        // Move the piece randomly
         var hasMoved = false;
         for (let move of selectedPiece.possibleMoves) {
             var destinationX = selectedPiece.x + move[0];
             var destinationY = selectedPiece.y + move[1];
 
-            // Invalid coords guard
-            if (destinationX < 0 || destinationX > 7 || destinationY < 0 || destinationY > 7) {
+            if (!isValidMove(destinationX, destinationY)) {
                 continue;
             }
-
-            // Square occupied guard
-            if (checkboardSlots[destinationY][destinationX] != null) {
+      
+    
+            if (!isSquareFree(destinationX, destinationY)) {
                 continue;
             }
 
@@ -218,6 +232,76 @@ window.onload = function() {
             }
         }
     }
+
+    function knightsTour(x, y, moveId) {
+        // (bool) If all squares are visited, return true
+        console.log(moveId)
+        if (moveId == 64) {
+            console.log(knightsTourBoard);
+            return true;
+        }
+    
+        let possibleMoves = [];
+    
+        for (let move of selectedPiece.possibleMoves) {
+            let nextX = x + move[0];
+            let nextY = y + move[1];
+            if (isValidMove(nextX, nextY) && (knightsTourBoard[nextY][nextX] === null)) {
+                let futureMovesCount = countMoves(nextX, nextY);
+                possibleMoves.push({
+                    x: nextX,
+                    y: nextY,
+                    futureMoves: futureMovesCount
+                });
+            }
+        }
+    
+        possibleMoves.sort((a, b) => a.futureMoves - b.futureMoves);
+    
+        for (let move of possibleMoves) {
+            knightsTourBoard[move.y][move.x] = moveId;
+            if (knightsTour(move.x, move.y, moveId + 1)) {
+                return true;
+            }
+            knightsTourBoard[move.y][move.x] = null;
+        }
+    
+        return false;
+    }
+
+    function countMoves(x, y) {
+        let count = 0;
+        for (let move of selectedPiece.possibleMoves) {
+            let nextX = x + move[0];
+            let nextY = y + move[1];
+            if (isValidMove(nextX, nextY) && (knightsTourBoard[nextY][nextX] === null)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    function findRowCol(matrix, num) {
+        const numRows = matrix.length;
+        const numCols = matrix[0].length;
+        
+        for (let row = 0; row < numRows; row++) {
+            for (let col = 0; col < numCols; col++) {
+                if (matrix[row][col] === num) {
+                    return { row, col };
+                }
+            }
+        }
+        
+        return null;
+    }
+
+    function sleep(time) {
+        setTimeout(function() {
+            console.log("Sleeping...")
+        }, time);
+    }
+
 
     // Drawing
     drawCheckboard(checkboardDims.size, checkboardDims.rows, checkboardDims.cols);
@@ -254,6 +338,7 @@ window.onload = function() {
             moveButton.disabled = false;
             moveTextBox.disabled = false;
             moveRandomButton.disabled = false;
+            moveKnightsTourButton.disabled = false;
             alert('You can now move the pieces.');
         }
         else {
@@ -271,5 +356,57 @@ window.onload = function() {
         movePieceRandom()
     });
 
+    moveKnightsTourButton.addEventListener('click', function() {
+        var x = selectedPiece.x;
+        var y = selectedPiece.y;
+        var destinationX = null;
+        var destinationY = null;
+        knightsTourBoard[y][x] = 0;
+        
+        if (!knightsTour(x, y, 1)) {
+            console.log("Solution does not exist.");
+            return;
+        }
+        drawRedCircle(checkboardDims, x, y);
+        let i = 1;
+    
+        function moveNextPiece() {
+            if (i < 64) {
+                let {row, col} = findRowCol(knightsTourBoard, i);
+                destinationX = col;
+                destinationY = row;
+    
+                // Draw a red circle on the square where the piece was
+    
+                if (selectedPiece.move(destinationX, destinationY, checkboardDims)) {
+                    console.log(`${selectedPiece.constructor.name} (${selectedPiece.colour}) moves from (${selectedPiece.x}, ${selectedPiece.y})` + 
+                         ` to (${destinationX}, ${destinationY}).`);
+                    checkboardSlots[selectedPiece.y][selectedPiece.x] = null;
+                    checkboardSlots[destinationY][destinationX] = selectedPiece;
+                    drawRedCircle(checkboardDims, selectedPiece.x, selectedPiece.y);
+                    selectedPiece.x = destinationX;
+                    selectedPiece.y = destinationY;
+                }
+    
+                i++;
+                setTimeout(moveNextPiece, 500);
+            }
+        }
+
+        moveNextPiece();
+    });
+    
+    function drawRedCircle(checkboardDims, col, row) {
+        var centerX = col * checkboardDims.cellWidth + checkboardDims.margin + checkboardDims.cellWidth / 2;
+        var centerY = row * checkboardDims.cellHeight + checkboardDims.margin + checkboardDims.cellHeight / 2;
+        var radius = Math.min(checkboardDims.cellWidth, checkboardDims.cellHeight) / 4;
+    
+        context.beginPath();
+        context.arc(centerX, centerY, radius, 0, 2 * Math.PI, false);
+        context.fillStyle = 'red';
+        context.fill();
+        context.closePath();
+    }
+    
 };
 
